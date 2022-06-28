@@ -15,17 +15,16 @@ import json
 def deploy(pipeline_req, experiment_id, tracking_uri):
     pipeline_info = json.loads(pipeline_req)
     mlflow.set_tracking_uri(tracking_uri)
-    with mlflow.start_run(experiment_id=experiment_id):
-        client = MlflowClient()
-        downloaded_artifact_dir = "downloaded_artifacts"
-        local_dir = os.path.join(ROOT_DIR, downloaded_artifact_dir)
-        create_dir(local_dir)
-        for run_info in pipeline_info['runs']:
-            print("Downloading artifacts of ", run_info['name'])
-            local_path = os.path.join(local_dir, run_info['name'])
-            create_dir(local_path)
-            client.download_artifacts(run_info['id'], "", local_path)
-        print('Pipeline deployed and ready for use')
+    client = MlflowClient()
+    downloaded_artifact_dir = "downloaded_artifacts"
+    local_dir = os.path.join(ROOT_DIR, downloaded_artifact_dir)
+    create_dir(local_dir)
+    for run_info in pipeline_info['runs']:
+        print("Downloading artifacts of ", run_info['name'])
+        local_path = os.path.join(local_dir, run_info['name'])
+        create_dir(local_path)
+        client.download_artifacts(run_info['id'], "", local_path)
+    print('Pipeline deployed and ready for use')
 
 def create_dir(dir):
     if os.path.exists(dir) == False:
